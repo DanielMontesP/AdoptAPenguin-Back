@@ -5,7 +5,7 @@ const firebaseUploads = require("./firebaseUploads");
 jest.mock("firebase/storage", () => ({
   ref: jest.fn().mockReturnValue("checkRef"),
   uploadBytes: jest.fn().mockResolvedValue({}),
-  getStorage: jest.fn(),
+  getStorage: jest.fn().mockReturnValueOnce(true),
   getDownloadURL: jest.fn().mockResolvedValue("url"),
 }));
 

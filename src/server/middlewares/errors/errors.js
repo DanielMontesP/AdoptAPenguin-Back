@@ -24,7 +24,7 @@ const generalError = (err, req, res, next) => {
     );
     res.status(400).json({ message: "Validation error" });
   } else {
-    debug(`User Request--> ${chalk.red(`ERROR: ${err.message}`)}`);
+    debug(chalk.red(`User Request--> ERROR: ${err.message}`));
 
     res.status(errorCode).json({ message: errorMessage });
   }
