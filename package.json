@@ -1,0 +1,73 @@
+{
+  "name": "adoptaunpinguino-back",
+  "version": "0.1.0",
+  "main": "index.js",
+  "dependencies": {
+    "@types/jest": "^27.5.1",
+    "axios": "^0.27.2",
+    "bcrypt": "^5.0.1",
+    "chalk": "^4.1.2",
+    "commander": "^9.3.0",
+    "cors": "^2.8.5",
+    "debug": "^4.3.4",
+    "dotenv": "^16.0.1",
+    "express": "^4.18.1",
+    "express-validation": "^4.1.0",
+    "firebase": "^9.8.4",
+    "helmet": "^5.1.0",
+    "jest": "^28.1.0",
+    "jsonwebtoken": "^8.5.1",
+    "mongodb-memory-server": "^8.6.0",
+    "mongoose": "^6.3.4",
+    "mongoose-type-url": "^2.1.0",
+    "morgan": "^1.10.0",
+    "multer": "^1.4.5-lts.1",
+    "react-router-dom": "^6.3.0",
+    "supertest": "^6.2.3",
+    "supports-color": "^9.2.2"
+  },
+  "scripts": {
+    "start": "node src",
+    "test": "jest --watchAll=false --passWithNoTests",
+    "start-dev": "nodemon src -q",
+    "test-coverage": "jest --coverage --watchAll=false",
+    "prepare": "husky install"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/isdi-coders-2022/Daniel-Montes_Back-Final-Project-202204-BCN.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/isdi-coders-2022/Daniel-Montes_Back-Final-Project-202204-BCN/issues"
+  },
+  "devDependencies": {
+    "-": "^0.0.1",
+    "@types/debug": "^4.1.7",
+    "@types/dotenv": "^8.2.0",
+    "D": "^1.0.0",
+    "eslint": "^8.16.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-import": "^2.26.0",
+    "husky": "^7.0.0",
+    "install": "^0.13.0",
+    "nodemon": "^2.0.16",
+    "npm": "^8.12.1"
+  },
+  "jest": {
+    "collectCoverageFrom": [
+      "src/**/*.js",
+      "!src/index.js",
+      "!src/server/initializeServer.js",
+      "!src/server/index.js",
+      "!server/index.js",
+      "!src/db/index.js",
+      "!src/server/mocks/**",
+      "!.eslintrc.js",
+      "!src/server/utils/dictionaries/**"
+    ]
+  }
+}
