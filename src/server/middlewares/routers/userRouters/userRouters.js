@@ -22,17 +22,11 @@ const usersRouters = express.Router();
 
 const beforeLogin = () => {
   try {
-    debug(
-      `${logPrefix}${chalk.blue(` LOGIN: `)}${chalk.green(
-        `Validating user schema...`
-      )}`
-    );
+    debug(`${logPrefix}LOGIN: ${chalk.green(`Validating user schema...`)}`);
     const result = validate(userLoginSchema);
 
     debug(
-      `${logPrefix}${chalk.blue(` LOGIN: `)}${chalk.green(
-        `User schema validated successfully.`
-      )}`
+      `${logPrefix}LOGIN: ${chalk.green(`User schema validated successfully.`)}`
     );
     return result;
   } catch (error) {

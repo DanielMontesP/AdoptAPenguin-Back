@@ -1,7 +1,6 @@
 require("dotenv").config();
 const chalk = require("chalk");
 const debug = require("debug")("AAP:Errors");
-// const { ValidationError } = require("express-validation");
 
 const { customError } = require("../../utils/customError");
 
