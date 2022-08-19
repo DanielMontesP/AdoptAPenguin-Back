@@ -19,12 +19,12 @@ const generalError = (err, req, res, next) => {
   if (err instanceof ValidationError) {
     debug(
       `User Request--> ${chalk.red(
-        `ERROR: (${err.statusCode}) ${err.message}`
+        `ERROR: (${err.statusCode}) ${err.message} - ${req.body}`
       )}`
     );
     res.status(400).json({ message: "Validation error" });
   } else {
-    debug(chalk.red(`User Request--> ERROR: ${err.message}`));
+    debug(chalk.red(`User Request--> ERROR: ${err}`));
 
     res.status(errorCode).json({ message: errorMessage });
   }
