@@ -18,10 +18,10 @@ const corsOptions = {
     "http://localhost:5001",
     "http://localhost:5002",
     "http://127.0.0.1:3000",
-    "https://daniel-montes-final-project-202204-bcn.netlify.app/",
-    "https://daniel-montes-final-project-202204-bcn.netlify.app",
-    "https://daniel-montes-back-final-project-202204.onrender.com/",
-    "https://daniel-montes-back-final-project-202204.onrender.com",
+    "https://adoptapenguin.netlify.app/",
+    "https://adoptapenguin.netlify.app",
+    "https://adoptapenguin2.onrender.com/",
+    "https://adoptapenguin2.onrender.com",
   ],
 };
 

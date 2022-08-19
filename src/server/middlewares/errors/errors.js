@@ -16,7 +16,12 @@ const generalError = (err, req, res, next) => {
   const errorCode = err.code ?? 500;
   const errorMessage = err.code ? err.message : "Internal server error";
 
-  if (err instanceof ValidationError) {
+  if (err.statusCode === 404) {
+    res
+      .status(404)
+      .json("Please visit site: https://adoptapenguin.netlify.app/");
+    debug(chalk.red(`User Request--> ERROR: ${err.customMessage}`));
+  } else if (err instanceof ValidationError) {
     debug(
       `User Request--> ${chalk.red(
         `ERROR: (${err.statusCode}) ${err.message} - ${req.body}`
