@@ -17,34 +17,53 @@ describe("Given the notFoundError function", () => {
 
 describe("Given the generalError function", () => {
   describe("When its invoked with an empty error", () => {
-    test("Then it should call the response's status method with a 500", () => {
+    test("Then it should call the response's status method with a 400", () => {
       const res = {
         status: jest.fn().mockReturnThis(),
         json: jest.fn(),
       };
-      const expectedError = 500;
-      const error = {};
+      req = {
+        status: jest.fn().mockReturnThis(),
+        json: jest.fn(),
+      };
+      jest.mock("express-validation");
 
-      generalError(error, null, res, null);
+      const expectedError = 400;
+      const error = {
+        status: 400,
+        statusCode: 400,
+        json: jest.fn(),
+        details: "details",
+        message: "message",
+      };
+
+      generalError(error, req, res, null);
 
       expect(res.status).toHaveBeenCalledWith(expectedError);
     });
   });
 
   describe("When its invoked with an empty error", () => {
-    test("Then it should call the response's status method with a 500", () => {
+    test("Then it should call the response's status method with a 404", () => {
       const res = {
-        status: jest.fn().mockReturnThis(500),
+        status: jest.fn().mockReturnThis(404),
         json: jest.fn(),
       };
       req = {
-        status: jest.fn().mockReturnThis(500),
+        status: jest.fn().mockReturnThis(),
         json: jest.fn(),
+        body: jest.fn(),
       };
       jest.mock("express-validation");
 
-      const expectedError = 500;
-      const error = " { true: true }";
+      const expectedError = 404;
+      const error = {
+        status: 404,
+        statusCode: 404,
+        json: jest.fn(),
+        details: "details",
+        message: "message",
+      };
 
       generalError(error, req, res, null);
 
