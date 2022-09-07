@@ -22,7 +22,6 @@ const corsOptions = {
     "https://adoptapenguin.netlify.app",
     "https://adoptapenguin2.onrender.com/",
     "https://adoptapenguin2.onrender.com",
-    "http://139.47.114.88:3000",
   ],
 };
 
