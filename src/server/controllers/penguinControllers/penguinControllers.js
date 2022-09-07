@@ -202,8 +202,8 @@ const editPenguin = async (req, res) => {
       likes: req.body.likes,
       likers: req.body.likers,
       favs: req.body.favs,
-      image: req.img || "",
-      imageBackup: req.body.imageBackup || "",
+      image: req.img,
+      imageBackup: req.imageBackup,
       description: req.body.description,
     };
     message = chalk.green(`${logPrefixEdit}${penguinEdited.name}->${type}`);
