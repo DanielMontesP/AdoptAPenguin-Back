@@ -11,6 +11,7 @@ const {
   getLikesPenguins,
   getPenguin,
   editPenguin,
+  searchPenguin,
 } = require("../../../controllers/penguinControllers/penguinControllers");
 const { penguinSchema } = require("../../../schemas/penguinSchema");
 
@@ -37,6 +38,7 @@ penguinRouters.delete("/:idPenguin", deletePenguin);
 penguinRouters.get("/favs", getFavsPenguins);
 penguinRouters.get("/likes", getLikesPenguins);
 penguinRouters.get("/:idPenguin", validate(penguinSchema), getPenguin);
+penguinRouters.get("/search/:stringToSearch", searchPenguin);
 penguinRouters.put("/:idPenguin", editPenguin);
 
 module.exports = penguinRouters;

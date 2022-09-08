@@ -12,27 +12,21 @@ const notFoundError = (req, res, next) => {
 
 // eslint-disable-next-line no-unused-vars
 const generalError = (err, req, res, next) => {
-  const errorCode = err.code ?? 500;
-  const errorMessage = err.code ? err.message : "Internal server error";
-
-  if (err.statusCode === 404) {
+  if (err.statusCode === 404 || err.statusCode === 400) {
     res
       .status(404)
-      .json("Please visit site: https://adoptapenguin.netlify.app/");
-    debug(chalk.red(`User Request--> ERROR: ${err.customMessage}`));
-  } else {
-    if (err.details) {
-      debug(
-        `User Request--> ${chalk.red(
-          `ERROR: (${err.statusCode}) ${err.message}`
-        )}`
-      );
-    }
-    res
-      .status(err.status)
       .json(
-        `message: ${errorMessage}, code: ${errorCode} },status: ${err.status}`
+        "Sorry page not fount. Please visit site: https://adoptapenguin.netlify.app/"
       );
+    debug(chalk.red(`User Request--> ERROR: ${err} `));
+  } else {
+    const errorMessage =
+      err.message && err.statusCode
+        ? `${err.message}. StatusCode: ${err.statusCode}`
+        : err;
+
+    debug(chalk.red(`User Request--> ERROR: ${errorMessage} `));
+    res.status(err.status).json(`message: ${err}`);
   }
 };
 
