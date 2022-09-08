@@ -28,7 +28,7 @@ describe("Given the generalError function", () => {
       };
       jest.mock("express-validation");
 
-      const expectedError = 400;
+      const expectedError = 404;
       const error = {
         status: 400,
         statusCode: 400,
