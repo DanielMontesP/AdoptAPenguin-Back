@@ -8,7 +8,8 @@ const { notFoundError, generalError } = require("./middlewares/errors/errors");
 
 const corsOptions = {
   origin: [
-    "http://localhost:3000", // frontend
+    "http://localhost:3000",
+    "http://192.168.1.15:3000", // frontend
     "http://localhost:3001",
     "http://localhost:3002",
     "http://localhost:4000",

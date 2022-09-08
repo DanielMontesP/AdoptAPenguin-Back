@@ -10,6 +10,7 @@ const logPrefixDelete = chalk.blue(`${logPrefix}DELETE: `);
 const logPrefixgetFavs = chalk.blue(`${logPrefix}GET favs: `);
 const logPrefixgetCreate = chalk.blue(`${logPrefix}CREATE: `);
 const logPrefixEdit = chalk.blue(`${logPrefix}EDIT: `);
+const logPrefixSearch = chalk.blue(`${logPrefix}SEARCH: `);
 
 let message = "";
 
@@ -229,6 +230,32 @@ const editPenguin = async (req, res) => {
   }
 };
 
+const searchPenguin = async (req, res, next) => {
+  try {
+    const { stringToSearch } = req.params;
+    message = chalk.green(`${logPrefixSearch} ${String(stringToSearch)}`);
+    debug(message);
+
+    const penguins = await Penguin.find({
+      name: stringToSearch,
+    });
+    message = chalk.green(
+      `${logPrefixSearch}Found: ${penguins.length} matches.`
+    );
+    debug(message);
+
+    message = chalk.green(`${logPrefixSearch}Finished successfully.`);
+    debug(message);
+
+    res.status(200).json(penguins);
+  } catch (err) {
+    err.message = `Search: ${req.params.stringToSearch}`;
+    err.code = 404;
+
+    next(err);
+  }
+};
+
 module.exports = {
   getPenguin,
   getPenguins,
@@ -237,4 +264,5 @@ module.exports = {
   getFavsPenguins,
   getLikesPenguins,
   editPenguin,
+  searchPenguin,
 };
