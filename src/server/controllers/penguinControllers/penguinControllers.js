@@ -236,9 +236,11 @@ const searchPenguin = async (req, res, next) => {
     message = chalk.green(`${logPrefixSearch} ${String(stringToSearch)}`);
     debug(message);
 
+    const regex = new RegExp(stringToSearch);
     const penguins = await Penguin.find({
-      name: stringToSearch,
+      name: regex,
     });
+
     message = chalk.green(
       `${logPrefixSearch}Found: ${penguins.length} matches.`
     );
