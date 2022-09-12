@@ -128,7 +128,7 @@ const userRegister = async (req, res, next) => {
 const userGet = async (req, res, next) => {
   try {
     const { UserId } = req.params;
-    debug(chalk.green(`${logPrefixGet}UserId)`));
+    debug(chalk.green(`${logPrefixGet}${UserId})`));
 
     const user = await User.findById(UserId);
     const { username } = user;

@@ -172,6 +172,7 @@ const createPenguin = async (req, res, next) => {
       description,
       image: img,
       imageBackup: imgBackup,
+      imageResized: req.body.imageResized,
     });
 
     message = chalk.green(
