@@ -39,6 +39,11 @@ penguinRouters.get("/favs", getFavsPenguins);
 penguinRouters.get("/likes", getLikesPenguins);
 penguinRouters.get("/:idPenguin", validate(penguinSchema), getPenguin);
 penguinRouters.get("/search/:stringToSearch", searchPenguin);
-penguinRouters.put("/:idPenguin", editPenguin);
+penguinRouters.put(
+  "/:idPenguin",
+  upload.single("image"),
+  firebaseUploads,
+  editPenguin
+);
 
 module.exports = penguinRouters;

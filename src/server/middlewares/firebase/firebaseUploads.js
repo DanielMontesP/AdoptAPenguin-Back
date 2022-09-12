@@ -1,6 +1,5 @@
 const chalk = require("chalk");
 const debug = require("debug")(chalk.blue("AAP:Firebase"));
-
 const { initializeApp } = require("firebase/app");
 
 const {
@@ -108,16 +107,18 @@ const firebaseUploads = async (req, res, next) => {
         }
       );
     } else {
-      let errorDescription = `ERROR--> No image found.`;
+      let errorDescription = `No image found.`;
       message = `${logPrefix}${errorDescription}`;
       debug(chalk.red(message));
 
       req.imgBackup = "";
       req.img = "";
 
-      errorDescription = `ERROR--> Upload canceled.`;
+      errorDescription = `Upload canceled.`;
       message = `${logPrefix}${errorDescription}`;
       debug(chalk.red(message));
+
+      next();
     }
   } catch (err) {
     message = `${logPrefix}ERROR--> ${err.message}`;
