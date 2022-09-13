@@ -172,7 +172,7 @@ const createPenguin = async (req, res, next) => {
       description,
       image: img,
       imageBackup: imgBackup,
-      imageResized: req.body.imageResized,
+      imageResized: req.body.imageResized || req.imageResized,
     });
 
     message = chalk.green(
@@ -204,8 +204,9 @@ const editPenguin = async (req, res) => {
       likes: req.body.likes,
       likers: req.body.likers,
       favs: req.body.favs,
-      image: req.img,
+      image: req.image,
       imageBackup: req.imageBackup,
+      imageResized: req.imageResized || req.body.imageResized,
       description: req.body.description,
     };
     message = chalk.green(`${logPrefixEdit}${penguinEdited.name}->${type}`);
