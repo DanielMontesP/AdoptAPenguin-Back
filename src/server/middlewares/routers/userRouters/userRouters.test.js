@@ -68,10 +68,60 @@ describe("Given a post /users/register endpoint", () => {
         ...jest.requireActual("jsonwebtoken"),
         sign: () => token,
       }));
-      const req = { body: { username: "p33", password: "p33" } };
+      let req = { body: { username: "p367553", password: "p33" } };
       const next = jest.fn();
 
       const res = { status: jest.fn().mockReturnValue(200), json: jest.fn() };
+      await userRegister(req, res, next);
+      expect(next).toHaveBeenCalled();
+
+      jest.mock("express-validation", () => ({
+        validate: () => true,
+      }));
+      req = { body: { username: "p367553", password: "p33" } };
+
+      User.finOne = jest.fn().mockReturnValue(false);
+
+      await userRegister(req, res, next);
+      expect(next).toHaveBeenCalled();
+    });
+  });
+  describe("When it receives a bad register call", () => {
+    test("Then it should respond with a 201 status code and a username", async () => {
+      jest.mock("bcrypt", () => ({
+        ...jest.requireActual("bcrypt"),
+        compare: () =>
+          jest.fn().mockResolvedValueOnce(true).mockRejectedValueOnce(false),
+      }));
+      const token = "030d715845518298a37ac8fa80f966eb7349d5e2";
+      jest.mock("jsonwebtoken", () => ({
+        ...jest.requireActual("jsonwebtoken"),
+        sign: () => token,
+      }));
+      let req = { body: { username: "p367553", password: "p33" } };
+      const next = jest.fn();
+
+      let res = { status: jest.fn().mockReturnValue(200), json: jest.fn() };
+      await userRegister(req, res, next);
+      expect(next).toHaveBeenCalled();
+
+      jest.mock("express-validation", () => ({
+        ...jest.requireActual("express-validation"),
+        validate: jest.fn().mockRejectedValue(false),
+      }));
+
+      jest.mock("../../../schemas/userSchema", () => ({
+        ...jest.requireActual("../../../schemas/userSchema"),
+        userLoginSchema: jest.fn().mockRejectedValue(false),
+      }));
+
+      req = { body: { badField: "badData" } };
+
+      User.finOne = jest.fn().mockRejectedValue(false);
+      res = {
+        status: jest.fn().mockRejectedValue(false),
+        json: jest.fn().mockRejectedValue(false),
+      };
       await userRegister(req, res, next);
       expect(next).toHaveBeenCalled();
     });

@@ -8,9 +8,14 @@ const {
   createPenguin,
   getFavsPenguins,
   getLikesPenguins,
+  searchPenguin,
 } = require("./penguinControllers");
 
-const { mockPenguin, mockToken } = require("../../../mocks/mocks");
+const {
+  mockPenguin,
+  mockPenguins,
+  mockToken,
+} = require("../../../mocks/mocks");
 const Penguin = require("../../../db/models/Penguin/Penguin");
 
 const next = jest.fn();
@@ -355,6 +360,21 @@ describe("Given editPenguin middleware", () => {
       await createPenguin(req, res, next);
 
       expect(res.status).toBe(500);
+    });
+  });
+});
+
+describe("Given searchPenguins middleware", () => {
+  describe("When it receives a bad request", () => {
+    test("Then it should call it's next method with an error", async () => {
+      const req = {
+        params: { stringToSearch: "22" },
+      };
+
+      Penguin.find = jest.fn().mockReturnValue({ mockPenguins });
+      await searchPenguin(req, null, next);
+
+      expect(next).toHaveBeenCalled();
     });
   });
 });

@@ -4,6 +4,7 @@ const morgan = require("morgan");
 const cors = require("cors");
 const usersRouters = require("./middlewares/routers/userRouters/userRouters");
 const penguinRouters = require("./middlewares/routers/penguinRouters/penguinRouters");
+const messageRouters = require("./middlewares/routers/messageRouters/messageRouters");
 const { notFoundError, generalError } = require("./middlewares/errors/errors");
 
 const corsOptions = {
@@ -38,6 +39,7 @@ app.use(express.static("uploads"));
 
 app.use("/users", usersRouters);
 app.use("/penguins", penguinRouters);
+app.use("/messages", messageRouters);
 
 app.use(notFoundError);
 app.use(generalError);

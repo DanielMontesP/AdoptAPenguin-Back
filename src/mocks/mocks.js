@@ -5,7 +5,7 @@ const mockPenguin = {
   description: "pengu description",
   image: "pingu.jpg",
   imageBackup: "pingu.jpg",
-  id: "",
+  id: "id",
   idPenguin: "",
 };
 
