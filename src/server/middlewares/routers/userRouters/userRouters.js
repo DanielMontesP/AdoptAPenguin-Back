@@ -38,25 +38,15 @@ const beforeLogin = () => {
 
 const beforeRegister = () => {
   try {
-    debug(
-      `${logPrefix}${chalk.blue(` REGISTER: `)}${chalk.green(
-        `Validating user schema...`
-      )}`
-    );
+    debug(chalk.blue(`${logPrefix} REGISTER: Validating user schema...`));
     const result = validate(userRegisterSchema);
 
     debug(
-      `${logPrefix}${chalk.blue(` REGISTER: `)}${chalk.green(
-        `User schema validated successfully.`
-      )}`
+      chalk.blue(`${logPrefix} REGISTER: User schema validated successfully.`)
     );
     return result;
   } catch (error) {
-    debug(
-      `${logPrefix}${chalk.blue(` REGISTER: `)}${chalk.red(
-        `ERROR Validating user schema.`
-      )}`
-    );
+    debug(chalk.red(`${logPrefix} REGISTER: ERROR Validating user schema.`));
     return error;
   }
 };
