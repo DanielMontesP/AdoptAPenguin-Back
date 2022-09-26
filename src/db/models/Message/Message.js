@@ -14,6 +14,14 @@ const MessageSchema = new Schema({
     type: String,
     required: true,
   },
+  data: {
+    type: String,
+    required: true,
+  },
+  read: {
+    type: Boolean,
+    required: true,
+  },
 });
 
 const Message = model("Message", MessageSchema, "messages");

@@ -1,5 +1,6 @@
 const chalk = require("chalk");
 const debug = require("debug")(chalk.blue("AAP:MControllers"));
+const jwt = require("jsonwebtoken");
 const Message = require("../../../db/models/Message/Message");
 const { customError } = require("../../utils/customError");
 
@@ -10,7 +11,7 @@ const logPrefixGet = chalk.blue(`${logPrefix}GET MESSAGES: `);
 let message = "";
 
 const createMessage = async (req, res, next) => {
-  const { idUser, idPenguin, content } = req.body;
+  const { idUser, idPenguin, content, data, read } = req.body;
 
   message = `${logPrefixCreate}${idUser}`;
 
@@ -21,6 +22,8 @@ const createMessage = async (req, res, next) => {
       idUser,
       idPenguin,
       content,
+      data,
+      read,
     };
 
     await Message.create(newMessage);
@@ -42,14 +45,19 @@ const createMessage = async (req, res, next) => {
 
 const getMessages = async (req, res, next) => {
   try {
-    const user = req.body.idUser;
+    const { idPenguin } = req.params;
+    const { authorization } = req.headers;
+    const token = authorization.replace("Bearer ", "");
+    const { username, id } = jwt.verify(token, process.env.JWT_SECRET);
 
-    message = chalk.green(`${logPrefixGet}Searching messages for: ${user}.`);
+    message = chalk.green(
+      `${logPrefixGet}Searching messages for: ${username}.`
+    );
     debug(message);
 
     const messages = await Message.find({
-      idUser: user,
-      idPenguin: req.body.idPenguin,
+      idUser: id,
+      idPenguin,
     });
 
     message = chalk.green(`${logPrefixGet}Total found: ${messages.length}.`);
