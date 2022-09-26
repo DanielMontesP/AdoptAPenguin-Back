@@ -10,6 +10,6 @@ const penguinRouters = express.Router();
 
 penguinRouters.post("/create", createMessage);
 
-penguinRouters.get("/", getMessages);
+penguinRouters.get("/:idPenguin", getMessages);
 
 module.exports = penguinRouters;
