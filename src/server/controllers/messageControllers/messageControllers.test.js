@@ -1,7 +1,13 @@
+const jwt = require("jsonwebtoken");
 const { createMessage, getMessages } = require("./messageControllers");
 const { mockMessages } = require("../../../mocks/mockMessages");
 const Message = require("../../../db/models/Message/Message");
-const { mockPenguin, mockUserId } = require("../../../mocks/mocks");
+const {
+  mockPenguin,
+  mockUserId,
+  mockToken,
+  mockUserCredentials,
+} = require("../../../mocks/mocks");
 
 const next = jest.fn();
 
@@ -18,15 +24,28 @@ jest.mock("jsonwebtoken", () => ({
 
 describe("Given messages middlewares", () => {
   describe("When getMessages is callled", () => {
-    test("Then it should call it's next method with an error", async () => {
+    test("Then it should return messages", async () => {
       const req = {
-        body: { idUser: "22", idPenguin: "62a80601b912ac301b85eeac" },
+        body: {
+          idUser: mockUserId.id,
+          idPenguin: "22",
+          content: "content test",
+        },
+        params: { idPenguin: mockPenguin.id },
+        headers: { authorization: `Bearer ${mockToken}` },
       };
 
       Message.find = jest.fn().mockResolvedValue({ idUser: "id" });
-      await getMessages(req, null, next);
+      jwt.verify = jest.fn().mockResolvedValue({ username: "user", id: "444" });
 
-      expect(next).toHaveBeenCalled();
+      const res = {
+        status: jest.fn().mockReturnThis(),
+        json: jest.fn(req.body.idPenguin),
+      };
+
+      await getMessages(req, res, next);
+
+      expect(res.json).not.toBe(null);
     });
   });
 
@@ -38,6 +57,8 @@ describe("Given messages middlewares", () => {
           idPenguin: mockPenguin.id,
           content: "content test",
         },
+        params: { idPenguin: mockPenguin.id },
+        headers: { authorization: mockUserCredentials },
       };
 
       const res = {

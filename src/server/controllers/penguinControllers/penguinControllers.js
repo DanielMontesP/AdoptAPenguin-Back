@@ -239,9 +239,19 @@ const searchPenguin = async (req, res, next) => {
     debug(message);
 
     let penguins = [];
+
+    const regexpString = `$regex : /^${stringToSearch}$/i`;
     const regex = new RegExp(stringToSearch);
+
     const penguinsName = await Penguin.find({
-      name: regex,
+      $or: [
+        {
+          name: regex,
+        },
+        { category: regex },
+        { description: regexpString },
+      ],
+      $options: ["i"],
     });
 
     penguins = penguinsName.length >= 1 ? penguinsName : penguins;
