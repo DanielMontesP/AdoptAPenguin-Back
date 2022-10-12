@@ -126,4 +126,40 @@ describe("Given a post /users/register endpoint", () => {
       expect(next).toHaveBeenCalled();
     });
   });
+  describe("When it receives a bad register call", () => {
+    test("Then it should respond with a 201 status code and a username", async () => {
+      jest.mock("bcrypt", () => ({
+        ...jest.requireActual("bcrypt"),
+        compare: () =>
+          jest.fn().mockResolvedValueOnce(true).mockRejectedValueOnce(false),
+      }));
+
+      jest.mock("express-validation", () => ({
+        ...jest.requireActual("express-validation"),
+        validate: () => false,
+      }));
+
+      let req = { body: { username: "p367553", password: "p33" } };
+      const next = jest.fn();
+
+      let res = { status: jest.fn().mockReturnValue(200), json: jest.fn() };
+      await userRegister(req, res, next);
+      expect(next).toHaveBeenCalled();
+
+      jest.mock("../../../schemas/userSchema", () => ({
+        ...jest.requireActual("../../../schemas/userSchema"),
+        userLoginSchema: jest.fn().mockRejectedValue(true),
+      }));
+
+      req = { body: { badField: "badData" } };
+
+      User.finOne = jest.fn().mockRejectedValue(false);
+      res = {
+        status: jest.fn().mockRejectedValue(false),
+        json: jest.fn().mockRejectedValue(false),
+      };
+      await userRegister(req, res, next);
+      expect(next).toHaveBeenCalled();
+    });
+  });
 });

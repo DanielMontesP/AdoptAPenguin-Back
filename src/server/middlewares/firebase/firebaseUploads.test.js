@@ -55,4 +55,88 @@ describe("Given a firebaseUploads middleware", () => {
       expect(next).toHaveBeenCalledWith("readFileError");
     });
   });
+
+  describe("When the readFile with file method files", () => {
+    test("Then it should call the received next function with the error 'readFileError'", async () => {
+      const req = { file: { filename: "file" } };
+
+      jest
+        .spyOn(path, "join")
+        .mockReturnValue(`${path.join("uploads", "images")}`);
+
+      jest
+        .spyOn(fs, "rename")
+        .mockImplementation((oldpath, newpath, callback) => {
+          callback();
+        });
+
+      jest.spyOn(fs, "readFile").mockImplementation((pathToRead, callback) => {
+        callback("");
+      });
+
+      const next = jest.fn();
+      const dispatch = jest.fn();
+      const res = jest.fn().mockResolvedValue(true);
+
+      await dispatch(firebaseUploads(req, res, next));
+
+      expect(dispatch).toHaveBeenCalled();
+    });
+  });
+
+  describe("When the readFile with no file method files", () => {
+    test("Then it should call the received next function with the error 'readFileError'", async () => {
+      const req = {};
+
+      jest
+        .spyOn(path, "join")
+        .mockReturnValue(`${path.join("uploads", "images")}`);
+
+      jest
+        .spyOn(fs, "rename")
+        .mockImplementation((oldpath, newpath, callback) => {
+          callback();
+        });
+
+      jest.spyOn(fs, "readFile").mockImplementation((pathToRead, callback) => {
+        callback("");
+      });
+
+      const next = jest.fn();
+      const dispatch = jest.fn();
+      const res = jest.fn().mockResolvedValue(true);
+
+      await dispatch(firebaseUploads(req, res, next));
+
+      expect(dispatch).toHaveBeenCalled();
+    });
+  });
+
+  describe("When the readFile with no file method files", () => {
+    test("Then it should call the received next function with the error 'readFileError'", async () => {
+      const req = {};
+
+      jest
+        .spyOn(path, "join")
+        .mockReturnValue(`${path.join("uploads", "images")}`);
+
+      jest
+        .spyOn(fs, "rename")
+        .mockImplementation((oldpath, newpath, callback) => {
+          callback();
+        });
+
+      jest.spyOn(fs, "readFile").mockImplementation((pathToRead, callback) => {
+        callback("");
+      });
+
+      const next = jest.fn();
+      const dispatch = jest.fn();
+      const res = jest.fn().mockResolvedValue(true);
+
+      await dispatch(firebaseUploads(req, res, next));
+
+      expect(dispatch).toHaveBeenCalled();
+    });
+  });
 });
