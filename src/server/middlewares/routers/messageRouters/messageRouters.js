@@ -10,7 +10,6 @@ const { messageSchema } = require("../../../schemas/messageSchema");
 
 const messagesRouters = express.Router();
 
-// messagesRouters.get("/", getMessages);
 messagesRouters.post("/create", createMessage);
 
 messagesRouters.get("message/:idMessage", validate(messageSchema), getMessage);
