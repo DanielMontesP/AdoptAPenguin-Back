@@ -11,28 +11,29 @@ const logPrefixGet = chalk.blue(`${logPrefix}GET MESSAGES: `);
 let message = "";
 
 const createMessage = async (req, res, next) => {
-  const { idUser, idPenguin, content, data, read } = req.body;
+  const { idUser, idPenguin, subject, content, data, read } = req.body;
 
-  message = `${logPrefixCreate}${idUser}`;
+  message = `${logPrefixCreate}Subject: ${subject}`;
 
   debug(chalk.green(message));
 
   try {
-    const newMessage = {
+    const newMessage = await Message.create({
       idUser,
       idPenguin,
+      subject,
       content,
       data,
       read,
-    };
-
-    await Message.create(newMessage);
+    });
 
     debug(
-      chalk.green(`${logPrefixCreate}${idUser} message successfully created.`)
+      chalk.green(
+        `${logPrefixCreate}${newMessage.subject} message successfully created.`
+      )
     );
 
-    res.status(201).json({ message });
+    res.status(201).json({ newMessage });
   } catch (error) {
     message = `${logPrefixCreate}ERROR ${error.message}`;
 

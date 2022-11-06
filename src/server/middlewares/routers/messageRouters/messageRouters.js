@@ -1,16 +1,14 @@
 require("dotenv").config();
 const express = require("express");
-const { validate } = require("express-validation");
 const {
   createMessage,
   getMessages,
 } = require("../../../controllers/messageControllers/messageControllers");
-const { messageSchema } = require("../../../schemas/messageSchema");
 
-const penguinRouters = express.Router();
+const messagesRouters = express.Router();
 
-penguinRouters.post("/create", validate(messageSchema), createMessage);
+messagesRouters.post("/create", createMessage);
 
-penguinRouters.get("/:idPenguin", getMessages);
+messagesRouters.get("/:idPenguin", getMessages);
 
-module.exports = penguinRouters;
+module.exports = messagesRouters;
