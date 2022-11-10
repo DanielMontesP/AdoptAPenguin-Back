@@ -7,6 +7,7 @@ const { customError } = require("../../utils/customError");
 const logPrefix = chalk.white("User Request--> ");
 const logPrefixCreate = chalk.blue(`${logPrefix}CREATE MESSAGE: `);
 const logPrefixGet = chalk.blue(`${logPrefix}GET MESSAGES: `);
+const logPrefixGetOne = chalk.blue(`${logPrefix}GET MESSAGE: `);
 
 let prompt = "";
 
@@ -77,22 +78,31 @@ const getMessage = async (req, res, next) => {
   try {
     const { idMessage } = req.params;
 
-    prompt = chalk.green(`${logPrefixGet}Searching message id: ${idMessage}.`);
-    debug(prompt);
+    if (idMessage !== "undefined") {
+      prompt = chalk.green(
+        `${logPrefixGetOne}Searching message id: ${idMessage}.`
+      );
+      debug(prompt);
 
-    const message = await Message.find({
-      idMessage,
-    });
+      const message = await Message.find({
+        _id: idMessage,
+      });
 
-    prompt = chalk.green(`${logPrefixGet}Found: ${message.subject}.`);
-    debug(prompt);
+      prompt = chalk.green(`${logPrefixGetOne}Found: ${message.subject}.`);
+      debug(prompt);
 
-    prompt = chalk.green(`${logPrefixGet}Finished successfully.`);
-    debug(prompt);
+      prompt = chalk.green(`${logPrefixGetOne}Finished successfully.`);
+      debug(prompt);
 
-    res.status(200).json({ message });
+      res.status(200).json(message);
+    } else {
+      prompt = chalk.red(
+        `${logPrefixGetOne}Message id: ${idMessage}, search canceled.`
+      );
+      debug(prompt);
+    }
   } catch (err) {
-    err.message = `${logPrefixGet}getMessage() getting message`;
+    err.message = `${logPrefixGetOne}getMessage() getting message`;
     err.code = 404;
 
     next(err);
