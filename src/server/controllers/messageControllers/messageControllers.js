@@ -8,11 +8,11 @@ const logPrefix = chalk.white("User Request--> ");
 const logPrefixCreate = chalk.blue(`${logPrefix}CREATE MESSAGE: `);
 const logPrefixGet = chalk.blue(`${logPrefix}GET MESSAGES: `);
 const logPrefixGetOne = chalk.blue(`${logPrefix}GET MESSAGE: `);
-
+const logPrefixEdit = chalk.blue(`${logPrefix}EDIT MESSAGE: `);
 let prompt = "";
 
 const createMessage = async (req, res, next) => {
-  const { idUser, idPenguin, subject, content, data, read } = req.body;
+  const { idUser, idPenguin, subject, content, data } = req.body;
 
   prompt = `${logPrefixCreate}Subject: ${subject}`;
 
@@ -25,7 +25,7 @@ const createMessage = async (req, res, next) => {
       subject,
       content,
       data,
-      read,
+      read: false,
     });
 
     debug(
@@ -88,13 +88,13 @@ const getMessage = async (req, res, next) => {
         _id: idMessage,
       });
 
-      prompt = chalk.green(`${logPrefixGetOne}Found: ${message.subject}.`);
+      prompt = chalk.green(`${logPrefixGetOne}Found: ${message[0].subject}.`);
       debug(prompt);
 
       prompt = chalk.green(`${logPrefixGetOne}Finished successfully.`);
       debug(prompt);
 
-      res.status(200).json(message);
+      res.status(200).json(message[0]);
     } else {
       prompt = chalk.red(
         `${logPrefixGetOne}Message id: ${idMessage}, search canceled.`
@@ -108,4 +108,41 @@ const getMessage = async (req, res, next) => {
     next(err);
   }
 };
-module.exports = { createMessage, getMessages, getMessage };
+
+const editMessage = async (req, res) => {
+  const type = req.query.task;
+  let message = "";
+  try {
+    const { idMessage } = req.params;
+    const messageEdited = {
+      subject: req.body.subject,
+      content: req.body.content,
+      data: req.body.data,
+      read: req.body.read,
+      idUser: req.body.idUser,
+      idPenguin: req.body.idPenguin,
+    };
+    message = chalk.green(`${logPrefixEdit}${messageEdited.subject}->${type}`);
+    debug(message);
+
+    await Message.findByIdAndUpdate(idMessage, messageEdited, {
+      new: true,
+    });
+
+    message = chalk.green(`${logPrefixEdit}Finished successfully.`);
+    debug(message);
+
+    res.status(200).json(messageEdited);
+  } catch (error) {
+    message = chalk.red(
+      `${logPrefixEdit}ERROR-> ${error} (err.code: ${error.code})`
+    );
+
+    debug(message);
+
+    error.customMessage = `${logPrefixEdit}${type}. ERROR Message not found.`;
+    error.code = 400;
+  }
+};
+
+module.exports = { editMessage, createMessage, getMessages, getMessage };
