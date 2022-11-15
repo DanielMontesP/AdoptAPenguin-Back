@@ -33,14 +33,10 @@ const firebaseUploads = async (req, res, next) => {
   try {
     const firebaseApp = initializeApp(firebaseConfig);
 
-    const newImageName = file ? `${Date.now()}${file.originalname}` : "";
+    const newImageName = file ? `${Date.now()}-${file.originalname}` : "";
 
-    message = `${logPrefix}Receiving...: ${newImageName} `;
-    debug(chalk.green(message));
-
-    message = `Received: ${newImageName}`;
     if (file) {
-      message = `${logPrefix}${message}`;
+      message = `${logPrefix}Received: ${file.originalname} `;
       debug(chalk.green(message));
 
       await fs.rename(
@@ -56,10 +52,8 @@ const firebaseUploads = async (req, res, next) => {
             next(error);
             return;
           }
-          message = `${logPrefix}Uploading...: ${newImageName}`;
-          debug(chalk.green(message));
-
-          message = `${logPrefix}Reading...: ${newImageName}`;
+          message = `Renamed to: ${newImageName}`;
+          message = `${logPrefix}${message}`;
           debug(chalk.green(message));
 
           await fs.readFile(
@@ -78,19 +72,20 @@ const firebaseUploads = async (req, res, next) => {
               const storage = getStorage(firebaseApp);
               const storageRef = ref(storage, newImageName);
 
-              message = `${logPrefix}UploadBytes...: ${newImageName}`;
-              debug(chalk.green(message));
-
               await uploadBytes(storageRef, readFile);
 
-              messDescription = `getDownloadURL...: ${newImageName}`;
-              message = `${logPrefix}${messDescription}`;
+              message = `${logPrefix}Uploaded: ${newImageName}.`;
               debug(chalk.green(message));
 
               const firebaseImageURL = await getDownloadURL(storageRef);
 
+              messDescription = `get URL: ${newImageName}.`;
+              message = `${logPrefix}${messDescription}`;
+              debug(chalk.green(message));
+
               req.imgBackup = firebaseImageURL;
               req.img = path.join("uploads", "images", newImageName);
+
               if (!req.img.includes("/uploads")) {
                 req.img = `/uploads/${newImageName}`;
               }
