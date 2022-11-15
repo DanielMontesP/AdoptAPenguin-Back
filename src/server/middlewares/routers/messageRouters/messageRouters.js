@@ -12,7 +12,7 @@ const { messageSchema } = require("../../../schemas/messageSchema");
 
 const messagesRouters = express.Router();
 
-messagesRouters.post("/create", validate(messageSchema), createMessage);
+messagesRouters.post("/create", createMessage);
 
 messagesRouters.get("/message/:idMessage", validate(messageSchema), getMessage);
 messagesRouters.get("/:idPenguin", getMessages);
