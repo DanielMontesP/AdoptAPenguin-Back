@@ -8,7 +8,7 @@ const messageSchema = {
     subject: Joi.string().max(20),
     content: Joi.string().max(20),
     data: Joi.string().max(20),
-    read: Joi.string().max(20),
+    read: Joi.boolean(),
   }),
 };
 

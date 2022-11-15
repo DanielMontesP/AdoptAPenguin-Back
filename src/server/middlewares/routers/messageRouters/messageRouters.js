@@ -5,15 +5,17 @@ const {
   createMessage,
   getMessages,
   getMessage,
+  editMessage,
 } = require("../../../controllers/messageControllers/messageControllers");
 
 const { messageSchema } = require("../../../schemas/messageSchema");
 
 const messagesRouters = express.Router();
 
-messagesRouters.post("/create", createMessage);
+messagesRouters.post("/create", validate(messageSchema), createMessage);
 
 messagesRouters.get("/message/:idMessage", validate(messageSchema), getMessage);
 messagesRouters.get("/:idPenguin", getMessages);
+messagesRouters.put("/message/edit/:idMessage", editMessage);
 
 module.exports = messagesRouters;
