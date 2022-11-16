@@ -5,10 +5,12 @@ const Message = require("../../../db/models/Message/Message");
 const { customError } = require("../../utils/customError");
 
 const logPrefix = chalk.white("User Request--> ");
-const logPrefixCreate = chalk.blue(`${logPrefix}CREATE MESSAGE: `);
-const logPrefixGet = chalk.blue(`${logPrefix}GET MESSAGES: `);
-const logPrefixGetOne = chalk.blue(`${logPrefix}GET MESSAGE: `);
-const logPrefixEdit = chalk.blue(`${logPrefix}EDIT MESSAGE: `);
+const logPrefixCreate = chalk.blue(`${logPrefix}CREATE Message: `);
+const logPrefixGet = chalk.blue(`${logPrefix}GET Messages: `);
+const logPrefixGetOne = chalk.blue(`${logPrefix}GET Message: `);
+const logPrefixEdit = chalk.blue(`${logPrefix}EDIT Message: `);
+const logPrefixDelete = chalk.blue(`${logPrefix}DELETE Message: `);
+
 let prompt = "";
 
 const createMessage = async (req, res, next) => {
@@ -145,4 +147,35 @@ const editMessage = async (req, res) => {
   }
 };
 
-module.exports = { editMessage, createMessage, getMessages, getMessage };
+const deleteMessage = async (req, res, next) => {
+  const { idMessage } = req.params;
+  let message = "";
+
+  message = chalk.green(`${logPrefixDelete}id: ${idMessage}`);
+  debug(message);
+
+  try {
+    await Message.findByIdAndDelete(idMessage);
+
+    message = chalk.green(`${logPrefixDelete}id: ${idMessage} successfully.`);
+    debug(message);
+
+    res.status(200).json({ msg: "Message deleted" });
+  } catch (err) {
+    message = chalk.red(`${logPrefixDelete}ERROR: Message id not found`);
+    debug(message);
+
+    err.message = `${logPrefixDelete}Message id not found`;
+    err.code = 404;
+
+    next(err);
+  }
+};
+
+module.exports = {
+  editMessage,
+  deleteMessage,
+  createMessage,
+  getMessages,
+  getMessage,
+};
