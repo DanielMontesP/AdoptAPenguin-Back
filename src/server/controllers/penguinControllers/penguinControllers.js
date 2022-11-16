@@ -5,7 +5,7 @@ const Penguin = require("../../../db/models/Penguin/Penguin");
 
 const logPrefix = chalk.white("User Request-->");
 const logPrefixDetail = chalk.blue(`${logPrefix}GET Detail: `);
-const logPrefixGet = chalk.blue(`${logPrefix}GET: `);
+const logPrefixGet = chalk.blue(`${logPrefix}GET Penguins: `);
 const logPrefixDelete = chalk.blue(`${logPrefix}DELETE: `);
 const logPrefixgetFavs = chalk.blue(`${logPrefix}GET favs: `);
 const logPrefixgetCreate = chalk.blue(`${logPrefix}CREATE: `);
