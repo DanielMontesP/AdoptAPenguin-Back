@@ -79,7 +79,7 @@ const firebaseUploads = async (req, res, next) => {
 
               const firebaseImageURL = await getDownloadURL(storageRef);
 
-              messDescription = `get URL: ${newImageName}.`;
+              messDescription = `get URL: ${firebaseImageURL}.`;
               message = `${logPrefix}${messDescription}`;
               debug(chalk.green(message));
 
@@ -92,8 +92,10 @@ const firebaseUploads = async (req, res, next) => {
 
               message = `${logPrefix}Finished successfully.`;
 
-              debug(chalk.green(`${logPrefix}img: ${req.img}`));
-              debug(chalk.green(`${logPrefix}imgBackup: ${firebaseImageURL}`));
+              debug(chalk.green(`${logPrefix}path: ${req.img}`));
+              debug(
+                chalk.green(`${logPrefix}path Backup: ${firebaseImageURL}`)
+              );
               debug(chalk.green(message));
 
               next();
