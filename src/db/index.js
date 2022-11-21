@@ -1,7 +1,9 @@
 require("dotenv").config();
 const chalk = require("chalk");
-const debug = require("debug")(chalk.blue("AAP:db:connection:"));
+const debug = require("debug")(chalk.blue("AAP:MongoDB:"));
 const mongoose = require("mongoose");
+
+const debugPrefix = "SRV  Request--> ";
 
 const connectDB = (connectionString) =>
   new Promise((resolve, reject) => {
@@ -25,7 +27,7 @@ const connectDB = (connectionString) =>
         reject();
         return;
       }
-      debug(chalk.green("Connected to database"));
+      debug(debugPrefix + chalk.green("Connected to database"));
       resolve();
     });
   });

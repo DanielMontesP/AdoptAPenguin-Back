@@ -21,15 +21,15 @@ const usersRouters = express.Router();
 
 const beforeLogin = () => {
   try {
-    debug(chalk.green(`${logPrefix}LOGIN: Validating user schema...)`));
+    debug(chalk.white(`${logPrefix} LOGIN: Validating user schema...`));
     const result = validate(userLoginSchema);
 
     debug(
-      chalk.green(`${logPrefix}LOGIN: User schema validated successfully.)`)
+      chalk.green(`${logPrefix} LOGIN: User schema validated successfully.`)
     );
     return result;
   } catch (error) {
-    debug(chalk.red(`${logPrefix}LOGIN: ERROR Validating user schema.)`));
+    debug(chalk.red(`${logPrefix} LOGIN: ERROR Validating user schema.`));
 
     return error;
   }
@@ -37,11 +37,11 @@ const beforeLogin = () => {
 
 const beforeRegister = () => {
   try {
-    debug(chalk.blue(`${logPrefix} REGISTER: Validating user schema...`));
+    debug(chalk.white(`${logPrefix} REGISTER: Validating user schema...`));
     const result = validate(userRegisterSchema);
 
     debug(
-      chalk.blue(`${logPrefix} REGISTER: User schema validated successfully.`)
+      chalk.green(`${logPrefix} REGISTER: User schema validated successfully.`)
     );
     return result;
   } catch (error) {
