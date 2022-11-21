@@ -3,7 +3,7 @@ const debug = require("debug")(chalk.blue("AAP:PControllers"));
 const jwt = require("jsonwebtoken");
 const Penguin = require("../../../db/models/Penguin/Penguin");
 
-const logPrefix = chalk.white("User Request-->");
+const logPrefix = chalk.white("User Request--> ");
 const logPrefixDetail = chalk.blue(`${logPrefix}GET Detail: `);
 const logPrefixGet = chalk.blue(`${logPrefix}GET Penguins: `);
 const logPrefixDelete = chalk.blue(`${logPrefix}DELETE: `);
@@ -195,7 +195,7 @@ const createPenguin = async (req, res, next) => {
 
 const editPenguin = async (req, res) => {
   const type = req.query.task;
-
+  const { img, imgBackup } = req;
   try {
     const { idPenguin } = req.params;
     const penguinEdited = {
@@ -204,12 +204,12 @@ const editPenguin = async (req, res) => {
       likes: req.body.likes,
       likers: req.body.likers,
       favs: req.body.favs,
-      image: req.image,
-      imageBackup: req.imageBackup,
+      image: img,
+      imageBackup: imgBackup,
       imageResized: req.imageResized || req.body.imageResized,
       description: req.body.description,
     };
-    message = chalk.green(`${logPrefixEdit}${penguinEdited.name}->${type}`);
+    message = chalk.green(`${logPrefixEdit}${penguinEdited.name}: ${type}`);
     debug(message);
 
     await Penguin.findByIdAndUpdate(idPenguin, penguinEdited, {

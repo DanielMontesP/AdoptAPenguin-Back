@@ -14,7 +14,6 @@ const {
   searchPenguin,
 } = require("../../../controllers/penguinControllers/penguinControllers");
 const { penguinSchema } = require("../../../schemas/penguinSchema");
-
 const firebaseUploads = require("../../firebase/firebaseUploads");
 
 const penguinRouters = express.Router();
@@ -33,17 +32,19 @@ penguinRouters.post(
   createPenguin
 );
 
-penguinRouters.get("/", getPenguins);
-penguinRouters.delete("/:idPenguin", deletePenguin);
-penguinRouters.get("/favs", getFavsPenguins);
-penguinRouters.get("/likes", getLikesPenguins);
-penguinRouters.get("/:idPenguin", validate(penguinSchema), getPenguin);
-penguinRouters.get("/search/:stringToSearch", searchPenguin);
 penguinRouters.put(
   "/:idPenguin",
   upload.single("image"),
   firebaseUploads,
   editPenguin
 );
+
+penguinRouters.get("/", getPenguins);
+penguinRouters.get("/favs", getFavsPenguins);
+penguinRouters.get("/likes", getLikesPenguins);
+penguinRouters.get("/:idPenguin", validate(penguinSchema), getPenguin);
+penguinRouters.get("/search/:stringToSearch", searchPenguin);
+
+penguinRouters.delete("/:idPenguin", deletePenguin);
 
 module.exports = penguinRouters;
