@@ -204,8 +204,8 @@ const editPenguin = async (req, res) => {
       likes: req.body.likes,
       likers: req.body.likers,
       favs: req.body.favs,
-      image: img,
-      imageBackup: imgBackup,
+      image: img || req.body.imageResized,
+      imageBackup: imgBackup || req.body.imageBackup,
       imageResized: req.imageResized || req.body.imageResized,
       description: req.body.description,
     };
