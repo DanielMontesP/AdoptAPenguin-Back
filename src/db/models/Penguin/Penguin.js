@@ -18,6 +18,10 @@ const PenguinSchema = new Schema({
     type: String,
     required: false,
   },
+  imageResized: {
+    type: String,
+    required: false,
+  },
   likes: {
     type: Number,
     required: false,
