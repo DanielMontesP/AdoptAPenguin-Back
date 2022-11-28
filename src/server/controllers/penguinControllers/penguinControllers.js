@@ -199,6 +199,7 @@ const editPenguin = async (req, res) => {
   try {
     const { idPenguin } = req.params;
     const penguinEdited = {
+      _id: req.body._id, // eslint-disable-line no-underscore-dangle
       name: req.body.name,
       category: req.body.category,
       likes: req.body.likes,
