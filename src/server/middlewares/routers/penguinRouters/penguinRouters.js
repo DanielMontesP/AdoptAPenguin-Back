@@ -21,7 +21,7 @@ const penguinRouters = express.Router();
 const upload = multer({
   dest: path.join("uploads", "images"),
   limits: {
-    fieldSize: 8000000,
+    fieldSize: `50mb`,
   },
 });
 
