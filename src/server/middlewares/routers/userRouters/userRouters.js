@@ -8,6 +8,7 @@ const {
   userLogin,
   userGet,
   userEdit,
+  userGetMessages,
 } = require("../../../controllers/userControllers/userControllers");
 
 const {
@@ -54,6 +55,7 @@ usersRouters.post("/register", beforeRegister(), userRegister);
 usersRouters.post("/login", beforeLogin(), userLogin);
 
 usersRouters.get("/:UserId", userGet);
+usersRouters.get("/messages/:UserId", userGetMessages);
 usersRouters.put("/edit/:UserId", userEdit);
 
 module.exports = usersRouters;

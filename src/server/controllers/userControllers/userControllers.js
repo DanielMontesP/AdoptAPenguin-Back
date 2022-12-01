@@ -2,8 +2,10 @@ const bcrypt = require("bcrypt");
 const jsonwebtoken = require("jsonwebtoken");
 const chalk = require("chalk");
 const debug = require("debug")(chalk.blue("AAP:UControllers"));
+const jwt = require("jsonwebtoken");
 const User = require("../../../db/models/User/User");
 const { customError } = require("../../utils/customError");
+const Message = require("../../../db/models/Message/Message");
 
 const logPrefix = chalk.white("User Request--> ");
 const logPrefixLogin = chalk.blue(`${logPrefix}LOGIN: `);
@@ -185,4 +187,39 @@ const userEdit = async (req, res) => {
   }
 };
 
-module.exports = { userLogin, userRegister, userGet, userEdit };
+const userGetMessages = async (req, res, next) => {
+  try {
+    let prompt = "";
+    const { authorization } = req.headers;
+    const token = authorization.replace("Bearer ", "");
+    const { username, id } = jwt.verify(token, process.env.JWT_SECRET);
+
+    prompt = chalk.green(`${logPrefixGet}Searching messages for: ${username}.`);
+    debug(prompt);
+
+    const messages = await Message.find({
+      idUser: id,
+    });
+
+    prompt = chalk.green(`${logPrefixGet}Total found: ${messages.length}.`);
+    debug(prompt);
+
+    prompt = chalk.green(`${logPrefixGet}Finished successfully.`);
+    debug(prompt);
+
+    res.status(200).json({ messages });
+  } catch (err) {
+    err.message = `${logPrefixGet}getMessages() getting messages`;
+    err.code = 404;
+
+    next(err);
+  }
+};
+
+module.exports = {
+  userLogin,
+  userRegister,
+  userGet,
+  userEdit,
+  userGetMessages,
+};
