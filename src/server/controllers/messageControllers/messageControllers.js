@@ -57,11 +57,18 @@ const getMessages = async (req, res, next) => {
     prompt = chalk.green(`${logPrefixGet}Searching messages for: ${username}.`);
     debug(prompt);
 
-    const messages = await Message.find({
-      idUser: id,
-      idPenguin,
-    });
-
+    let search = {};
+    if (idPenguin !== "") {
+      search = {
+        idUser: id,
+        idPenguin,
+      };
+    } else {
+      search = {
+        idUser: id,
+      };
+    }
+    const messages = await Message.find(search);
     prompt = chalk.green(`${logPrefixGet}Total found: ${messages.length}.`);
     debug(prompt);
 
@@ -76,6 +83,7 @@ const getMessages = async (req, res, next) => {
     next(err);
   }
 };
+
 const getMessage = async (req, res, next) => {
   try {
     const { idMessage } = req.params;
