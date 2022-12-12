@@ -195,32 +195,37 @@ const createPenguin = async (req, res, next) => {
 
 const editPenguin = async (req, res) => {
   const type = req.query.task;
-  const { img } = req;
+  const { img, imgBackup } = req;
   try {
     const { idPenguin } = req.params;
-    const penguinEdited = {
-      _id: req.body.id, // eslint-disable-line no-underscore-dangle
-      name: req.body.name,
-      category: req.body.category,
-      likes: req.body.likes,
-      likers: req.body.likers,
-      favs: req.body.favs,
-      image: img || req.body.image,
-      imageBackup: req.body.imageBackup || req.body.imageResized,
-      imageResized: req.imageResized || req.body.imageResized,
-      description: req.body.description,
-    };
-    message = chalk.green(`${logPrefixEdit}${penguinEdited.name}: ${type}`);
-    debug(message);
 
-    await Penguin.findByIdAndUpdate(idPenguin, penguinEdited, {
-      new: true,
-    });
+    if (idPenguin) {
+      const penguinEdited = {
+        _id: req.body.id, // eslint-disable-line no-underscore-dangle
+        name: req.body.name,
+        category: req.body.category,
+        likes: req.body.likes,
+        likers: req.body.likers,
+        favs: req.body.favs,
+        image: img,
+        imageBackup: imgBackup,
+        imageResized: req.imageResized || req.body.imageResized,
+        description: req.body.description,
+      };
+      message = chalk.green(`${logPrefixEdit}${penguinEdited.name}: ${type}`);
+      debug(message);
 
-    message = chalk.green(`${logPrefixEdit}Finished successfully.`);
-    debug(message);
+      await Penguin.findByIdAndUpdate(idPenguin, penguinEdited, {
+        new: true,
+      });
 
-    res.status(200).json(penguinEdited);
+      message = chalk.green(`${logPrefixEdit}Finished successfully.`);
+      debug(message);
+
+      res.status(200).json(penguinEdited);
+    } else {
+      message = `${logPrefixEdit}ERROR-> idPenguin undefined. Process canceled.`;
+    }
   } catch (error) {
     message = chalk.red(
       `${logPrefixEdit}ERROR-> ${error} (err.code: ${error.code})`
