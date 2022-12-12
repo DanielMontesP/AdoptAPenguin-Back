@@ -195,7 +195,7 @@ const createPenguin = async (req, res, next) => {
 
 const editPenguin = async (req, res) => {
   const type = req.query.task;
-  const { img } = req.body;
+  const { img } = req;
   try {
     const { idPenguin } = req.params;
     const penguinEdited = {
@@ -205,7 +205,7 @@ const editPenguin = async (req, res) => {
       likes: req.body.likes,
       likers: req.body.likers,
       favs: req.body.favs,
-      image: img || req.body.imageResized,
+      image: img || req.body.image,
       imageBackup: req.body.imageBackup || req.body.imageResized,
       imageResized: req.imageResized || req.body.imageResized,
       description: req.body.description,
