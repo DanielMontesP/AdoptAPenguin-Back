@@ -195,9 +195,9 @@ const createPenguin = async (req, res, next) => {
 
 const editPenguin = async (req, res) => {
   const type = req.query.task;
-  const { img, imgBackup } = req;
   try {
     const { idPenguin } = req.params;
+    const { img, imgBackup } = req;
 
     if (idPenguin) {
       const penguinEdited = {
@@ -206,9 +206,9 @@ const editPenguin = async (req, res) => {
         likes: req.body.likes,
         likers: req.body.likers,
         favs: req.body.favs,
-        image: img,
-        imageBackup: imgBackup,
-        imageResized: req.imageResized || req.body.imageResized,
+        image: img || req.body.image,
+        imageBackup: imgBackup || req.body.imageBackup,
+        imageResized: req.body.imageResized,
         description: req.body.description,
       };
       message = chalk.green(`${logPrefixEdit}${penguinEdited.name}: ${type}`);
