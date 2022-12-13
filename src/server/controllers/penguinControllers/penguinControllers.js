@@ -224,6 +224,7 @@ const editPenguin = async (req, res) => {
       res.status(200).json(penguinEdited);
     } else {
       message = `${logPrefixEdit}ERROR-> idPenguin undefined. Process canceled.`;
+      debug(message);
     }
   } catch (error) {
     message = chalk.red(
