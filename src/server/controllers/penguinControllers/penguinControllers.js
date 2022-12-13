@@ -201,7 +201,6 @@ const editPenguin = async (req, res) => {
 
     if (idPenguin) {
       const penguinEdited = {
-        _id: req.body.id, // eslint-disable-line no-underscore-dangle
         name: req.body.name,
         category: req.body.category,
         likes: req.body.likes,
