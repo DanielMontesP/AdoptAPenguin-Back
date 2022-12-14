@@ -194,12 +194,21 @@ const createPenguin = async (req, res, next) => {
 };
 
 const editPenguin = async (req, res) => {
-  const type = req.query.task;
   try {
+    const type = req.query.task;
     const { idPenguin } = req.params;
     const { img, imgBackup } = req;
 
-    if (idPenguin !== undefined && idPenguin !== "undefined") {
+    const idToProcess =
+      idPenguin !== undefined && idPenguin !== "undefined"
+        ? idPenguin
+        : req.body.id;
+
+    if (
+      idToProcess !== "" &&
+      idToProcess !== undefined &&
+      idToProcess !== "undefined"
+    ) {
       const penguinEdited = {
         name: req.body.name,
         category: req.body.category,
