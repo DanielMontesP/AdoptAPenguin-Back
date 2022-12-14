@@ -199,15 +199,15 @@ const editPenguin = async (req, res) => {
     const { idPenguin } = req.params;
     const { img, imgBackup } = req;
 
-    if (idPenguin) {
+    if (idPenguin !== undefined && idPenguin !== "undefined") {
       const penguinEdited = {
         name: req.body.name,
         category: req.body.category,
         likes: req.body.likes,
         likers: req.body.likers,
         favs: req.body.favs,
-        image: img || req.body.image,
-        imageBackup: imgBackup || req.body.imageBackup,
+        image: img !== undefined ? img : req.body.image,
+        imageBackup: imgBackup !== undefined ? imgBackup : req.body.imageBackup,
         imageResized: req.body.imageResized,
         description: req.body.description,
       };
@@ -227,9 +227,7 @@ const editPenguin = async (req, res) => {
       debug(message);
     }
   } catch (error) {
-    message = chalk.red(
-      `${logPrefixEdit}ERROR-> ${error} (err.code: ${error.code})`
-    );
+    message = chalk.red(`${logPrefixEdit}ERROR-> ${error}`);
 
     debug(message);
 
