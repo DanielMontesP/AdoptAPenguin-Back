@@ -109,9 +109,6 @@ const firebaseUploads = async (req, res, next) => {
 
       debug(message);
 
-      req.imgBackup = "";
-      req.img = "";
-
       errorDescription = `Upload canceled.`;
       message = `${logPrefix}${errorDescription}`;
       debug(message);
