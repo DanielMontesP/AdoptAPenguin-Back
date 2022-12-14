@@ -210,7 +210,7 @@ describe("Given getPenguinById middleware", () => {
     test("Then it should call it's response json status with 200 and json with the expected object", async () => {
       const req = {
         body: { name: "penguin1" },
-        params: { name: "penguin1" },
+        params: { name: "penguin1", idPenguin: "1" },
       };
       const res = {
         status: jest.fn().mockReturnThis(),

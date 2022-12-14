@@ -17,17 +17,33 @@ let message = "";
 const getPenguin = async (req, res, next) => {
   try {
     const { idPenguin } = req.params;
-    message = chalk.green(`${logPrefixDetail}Penguin id: ${String(idPenguin)}`);
+    const idToProcess =
+      idPenguin !== undefined && idPenguin !== "undefined"
+        ? idPenguin
+        : req.body.id;
+
+    message = chalk.green(
+      `${logPrefixDetail}Penguin id: ${String(idToProcess)}`
+    );
     debug(message);
 
-    const penguin = await Penguin.findById(idPenguin);
-    message = chalk.green(`${logPrefixDetail}Found: ${penguin.name}`);
-    debug(message);
+    if (
+      idToProcess !== "" &&
+      idToProcess !== undefined &&
+      idToProcess !== "undefined"
+    ) {
+      const penguin = await Penguin.findById(idToProcess);
+      message = chalk.green(`${logPrefixDetail}Found: ${penguin.name}`);
+      debug(message);
 
-    message = chalk.green(`${logPrefixDetail}Finished successfully.`);
-    debug(message);
+      message = chalk.green(`${logPrefixDetail}Finished successfully.`);
+      debug(message);
 
-    res.status(200).json(penguin);
+      res.status(200).json(penguin);
+    } else {
+      message = `${logPrefixEdit}ERROR-> idPenguin undefined. Process canceled.`;
+      debug(message);
+    }
   } catch (err) {
     err.message = `${logPrefixDetail}Penguin id: ${req.params.idPenguin}`;
     err.code = 404;
