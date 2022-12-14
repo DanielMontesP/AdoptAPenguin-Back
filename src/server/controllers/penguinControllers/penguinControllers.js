@@ -194,8 +194,8 @@ const createPenguin = async (req, res, next) => {
 };
 
 const editPenguin = async (req, res) => {
+  const type = req.query.task;
   try {
-    const type = req.query.task;
     const { idPenguin } = req.params;
     const { img, imgBackup } = req;
 
@@ -223,7 +223,7 @@ const editPenguin = async (req, res) => {
       message = chalk.green(`${logPrefixEdit}${penguinEdited.name}: ${type}`);
       debug(message);
 
-      await Penguin.findByIdAndUpdate(idPenguin, penguinEdited, {
+      await Penguin.findByIdAndUpdate(idToProcess, penguinEdited, {
         new: true,
       });
 
