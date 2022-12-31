@@ -1,11 +1,14 @@
 const bcrypt = require("bcrypt");
+const { JsonWebTokenError } = require("jsonwebtoken");
+const Message = require("../../../db/models/Message/Message");
 const User = require("../../../db/models/User/User");
-
+const { mockToken } = require("../../../mocks/mocks");
 const {
   userLogin,
   userRegister,
   userGet,
   userEdit,
+  userGetMessages,
 } = require("./userControllers");
 
 const token = "030d715845518298a37ac8fa80f966eb7349d5e2";
@@ -244,6 +247,36 @@ describe("Given the loginUser controller", () => {
       await userGet(req, res, next);
 
       expect(User.findById).toHaveBeenCalled();
+    });
+  });
+
+  describe("When userGetMessages it's invoked", () => {
+    test("Then it should receive the next expected function", async () => {
+      Message.find = jest.fn().mockResolvedValue(true);
+
+      const dispatch = jest.fn();
+
+      jest.mock("jsonwebtoken", () => ({
+        ...jest.requireActual("jsonwebtoken"),
+        sign: () => mockToken,
+        verify: jest.fn().mockResolvedValue({ username: "user", id: "id" }),
+      }));
+
+      const res = {
+        status: jest.fn().mockReturnThis(200),
+        json: jest.fn(),
+      };
+
+      const req = {
+        params: {
+          UserId: "",
+        },
+        headers: { authorization: `Bearer ${mockToken}` },
+      };
+
+      dispatch(userGetMessages(req, res, next));
+
+      expect(dispatch).toHaveBeenCalled();
     });
   });
 });

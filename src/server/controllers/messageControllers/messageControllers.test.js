@@ -3,6 +3,8 @@ const {
   createMessage,
   getMessages,
   getMessage,
+  deleteMessage,
+  editMessage,
 } = require("./messageControllers");
 const { mockMessages } = require("../../../mocks/mockMessages");
 const Message = require("../../../db/models/Message/Message");
@@ -99,6 +101,63 @@ describe("Given messages middlewares", () => {
       Message.create = jest.fn().mockResolvedValue(null);
 
       await createMessage(req, res, next);
+
+      expect(next).toHaveBeenCalled();
+    });
+  });
+
+  describe("When deleteMessage is called", () => {
+    test("Then it should call it's next method with an error", async () => {
+      const req = {
+        body: {
+          idMessage: "id",
+          idPenguin: mockPenguin.id,
+          content: "content test",
+        },
+        params: { idPenguin: mockPenguin.id },
+        headers: { authorization: mockUserCredentials },
+      };
+
+      const res = {
+        status: jest.fn().mockReturnValue(201),
+        json: jest.fn().mockReturnValue({ mockMessages }),
+      };
+
+      Message.findByIdAndDelete = jest.fn().mockResolvedValue(null);
+
+      await deleteMessage(req, res, next);
+
+      expect(next).toHaveBeenCalled();
+    });
+  });
+
+  describe("When editMessage is called", () => {
+    test("Then it should call it's next method with an error", async () => {
+      const req = {
+        body: {
+          idMessage: "id",
+          idPenguin: mockPenguin.id,
+          content: "content test",
+        },
+        query: { task: "task" },
+        params: { idMessage: "id" },
+        headers: { authorization: mockUserCredentials },
+        subject: "",
+        content: "content test",
+        data: "data",
+        read: false,
+        idUser: "idUser",
+        idPenguin: "idPenguin",
+      };
+
+      const res = {
+        status: jest.fn().mockReturnValue(201),
+        json: jest.fn().mockReturnValue({ mockMessages }),
+      };
+
+      Message.findByIdAndDelete = jest.fn().mockReturnValue(true);
+
+      await editMessage(req, res, next);
 
       expect(next).toHaveBeenCalled();
     });
