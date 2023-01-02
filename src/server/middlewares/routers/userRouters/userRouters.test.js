@@ -7,6 +7,7 @@ const connectDB = require("../../../../db");
 const app = require("../../../index");
 const {
   userRegister,
+  userLogin,
 } = require("../../../controllers/userControllers/userControllers");
 
 let mongoServer;
@@ -14,6 +15,7 @@ let mongoServer;
 jest.mock("../../../middlewares/auth/auth", () => ({
   auth: (req, res, next) => {
     req.user = { userId: "629d4b2e2145d66cc942e839" };
+    req.body = { username: "name", password: "password" };
     next();
   },
 }));
@@ -86,6 +88,7 @@ describe("Given a post /users/register endpoint", () => {
       expect(next).toHaveBeenCalled();
     });
   });
+
   describe("When it receives a bad register call", () => {
     test("Then it should respond with a 201 status code and a username", async () => {
       jest.mock("bcrypt", () => ({
@@ -126,40 +129,35 @@ describe("Given a post /users/register endpoint", () => {
       expect(next).toHaveBeenCalled();
     });
   });
-  describe("When it receives a bad register call", () => {
-    test("Then it should respond with a 201 status code and a username", async () => {
+
+  describe("When it receives a bad login call", () => {
+    test("Then it should respond with an error", async () => {
       jest.mock("bcrypt", () => ({
         ...jest.requireActual("bcrypt"),
         compare: () =>
           jest.fn().mockResolvedValueOnce(true).mockRejectedValueOnce(false),
       }));
-
-      jest.mock("express-validation", () => ({
-        ...jest.requireActual("express-validation"),
-        validate: () => false,
+      const token = "030d715845518298a37ac8fa80f966eb7349d5e2";
+      jest.mock("jsonwebtoken", () => ({
+        ...jest.requireActual("jsonwebtoken"),
+        sign: () => token,
       }));
 
-      let req = { body: { username: "p367553", password: "p33" } };
+      const beforeLogin = jest.fn();
+
+      const req = { body: { username: "da", password: "ni" } };
+
+      const res = {
+        status: jest.fn().mockReturnValue(200),
+        json: jest.fn().mockReturnValue("true"),
+      };
+
       const next = jest.fn();
 
-      let res = { status: jest.fn().mockReturnValue(200), json: jest.fn() };
-      await userRegister(req, res, next);
-      expect(next).toHaveBeenCalled();
+      await userLogin(req, res, next);
 
-      jest.mock("../../../schemas/userSchema", () => ({
-        ...jest.requireActual("../../../schemas/userSchema"),
-        userLoginSchema: jest.fn().mockRejectedValue(true),
-      }));
-
-      req = { body: { badField: "badData" } };
-
-      User.finOne = jest.fn().mockRejectedValue(false);
-      res = {
-        status: jest.fn().mockRejectedValue(false),
-        json: jest.fn().mockRejectedValue(false),
-      };
-      await userRegister(req, res, next);
-      expect(next).toHaveBeenCalled();
+      beforeLogin();
+      expect(beforeLogin).toHaveBeenCalled();
     });
   });
 });

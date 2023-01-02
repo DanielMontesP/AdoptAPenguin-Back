@@ -226,6 +226,25 @@ describe("Given getPenguinById middleware", () => {
     });
   });
 
+  describe("When it's called with undefined", () => {
+    test("Then it should throw error", async () => {
+      const req = {
+        body: { name: "penguin1" },
+        params: { name: "penguin1", idPenguin: "undefined" },
+      };
+
+      const res = {
+        status: jest.fn().mockReturnThis(),
+        json: jest.fn().mockReturnThis(),
+      };
+
+      Penguin.findById = jest.fn().mockReturnValue(mockPenguin);
+      await getPenguin(req, res, null);
+
+      expect(Penguin.findById).not.toHaveBeenCalled();
+    });
+  });
+
   describe("When it's called with a incorrect establishment id at request", () => {
     test("Then it should call it's next function with 'Bad request'", async () => {
       const req = {
@@ -268,6 +287,31 @@ describe("Given editPenguin middleware", () => {
       await editPenguin(req, res, null);
 
       expect(req).toHaveProperty("params", { idPenguin: "1" });
+    });
+  });
+
+  describe("When editPenbguin receives a request with a bad data", () => {
+    test("Then it should not call findByIdAndUpdate", async () => {
+      const req = {
+        params: { idPenguin: "undefined" },
+        body: { name: "penguin1" },
+        query: { task: "test" },
+        headers: {
+          authorization: "Bearer hola",
+        },
+      };
+      const res = {
+        status: jest.fn().mockReturnThis(),
+        json: jest.fn().mockReturnThis(),
+      };
+
+      jwt.verify = jest.fn().mockReturnValue({ id: "22" });
+
+      Penguin.findById = jest.fn().mockResolvedValue(true);
+      Penguin.findByIdAndUpdate = jest.fn().mockRejectedValue(false);
+      await editPenguin(req, res, null);
+
+      expect(Penguin.findByIdAndUpdate).not.toHaveBeenCalled();
     });
   });
 

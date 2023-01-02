@@ -37,7 +37,7 @@ describe("Given messages middlewares", () => {
           idPenguin: "22",
           content: "content test",
         },
-        params: { idPenguin: mockPenguin.id },
+        params: { idPenguin: "" },
         headers: { authorization: `Bearer ${mockToken}` },
       };
 
@@ -55,7 +55,7 @@ describe("Given messages middlewares", () => {
     });
   });
 
-  describe("When getMessage is callled", () => {
+  describe("When getMessages is callled", () => {
     test("Then it should return messages", async () => {
       const req = {
         body: {
@@ -75,13 +75,108 @@ describe("Given messages middlewares", () => {
         json: jest.fn(req.body.idPenguin),
       };
 
-      await getMessage(req, res, next);
+      await getMessages(req, res, next);
 
       expect(res.json).not.toBe(null);
     });
   });
 
-  describe("When createMessage is called", () => {
+  describe("When getMessages is called  with idPenguin correct data", () => {
+    test("Then it should return messages", async () => {
+      const req = {
+        body: {
+          idMessage: "id",
+          content: "content test",
+        },
+        query: { task: "task" },
+        params: { idMessage: "id", idPenguin: "" },
+        headers: { authorization: mockUserCredentials },
+        subject: "",
+        content: "content test",
+        data: "data",
+        read: false,
+        idUser: "idUser",
+      };
+
+      const res = {
+        status: jest.fn().mockReturnThis(),
+        json: jest.fn().mockReturnValue(mockMessages[0]),
+      };
+
+      Message.find = jest.fn().mockReturnValue(mockMessages);
+
+      await getMessage(req, res, next);
+
+      expect(Message.find).toHaveBeenCalled();
+    });
+  });
+
+  describe("When getMessage is callled with idMessage undefined", () => {
+    test("Then it should return messages", async () => {
+      const req = {
+        body: {
+          idMessage: "undefined",
+          idPenguin: mockPenguin.id,
+          content: "content test",
+        },
+        query: { task: "task" },
+        params: { idMessage: "undefined" },
+        headers: { authorization: mockUserCredentials },
+        subject: "",
+        content: "content test",
+        data: "data",
+        read: false,
+        idUser: "idUser",
+        idPenguin: "idPenguin",
+      };
+
+      const res = {
+        status: jest.fn().mockReturnThis(),
+        json: jest.fn().mockReturnValue(mockMessages[0]),
+      };
+
+      Message.find = jest.fn().mockReturnValue(mockMessages);
+
+      await getMessage(req, res, next);
+
+      expect(Message.find).not.toHaveBeenCalled();
+    });
+  });
+
+  describe("When getMessage throw an error", () => {
+    test("Then it should return error", async () => {
+      const req = {
+        body: {
+          idPenguin: mockPenguin.id,
+          content: "content test",
+        },
+        query: { task: "task" },
+        params: { idMessage: "2" },
+        headers: { authorization: mockUserCredentials },
+        subject: "",
+        content: "content test",
+        data: "data",
+        read: false,
+        idUser: "idUser",
+        idPenguin: "idPenguin",
+      };
+
+      const res = {
+        status: jest.fn().mockReturnThis(),
+        json: jest.fn(),
+      };
+
+      const expectedError = new Error({ message: "Bad request", code: "404" });
+
+      Message.find = jest.fn().mockRejectedValue(expectedError);
+
+      await getMessage(req, res, next);
+
+      expect(next).toHaveBeenCalled();
+    });
+  });
+
+  describe("When createMessage return error", () => {
     test("Then it should call it's next method with an error", async () => {
       const req = {
         body: {
@@ -98,7 +193,7 @@ describe("Given messages middlewares", () => {
         json: jest.fn().mockReturnValue({ mockMessages }),
       };
 
-      Message.create = jest.fn().mockResolvedValue(null);
+      Message.create = jest.fn().mockResolvedValue(mockMessages[0]);
 
       await createMessage(req, res, next);
 
@@ -132,7 +227,7 @@ describe("Given messages middlewares", () => {
   });
 
   describe("When editMessage is called", () => {
-    test("Then it should call it's next method with an error", async () => {
+    test("Then it should call Message.findByIdAndUpdate", async () => {
       const req = {
         body: {
           idMessage: "id",
@@ -155,11 +250,11 @@ describe("Given messages middlewares", () => {
         json: jest.fn().mockReturnValue({ mockMessages }),
       };
 
-      Message.findByIdAndDelete = jest.fn().mockReturnValue(true);
+      Message.findByIdAndUpdate = jest.fn().mockReturnValue(mockMessages[0]);
 
       await editMessage(req, res, next);
 
-      expect(next).toHaveBeenCalled();
+      expect(Message.findByIdAndUpdate).toHaveBeenCalled();
     });
   });
 });
