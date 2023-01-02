@@ -1,5 +1,5 @@
 const bcrypt = require("bcrypt");
-const { JsonWebTokenError } = require("jsonwebtoken");
+const jwt = require("jsonwebtoken");
 const Message = require("../../../db/models/Message/Message");
 const User = require("../../../db/models/User/User");
 const { mockToken } = require("../../../mocks/mocks");
@@ -33,7 +33,10 @@ describe("Given the loginUser controller", () => {
   describe("When it's invoked with a request object with the correct username and password", () => {
     test("Then it should call the response method with status 200, and a body containing a token will be received", async () => {
       const expectedStatus = 200;
-      const req = { body: { username: "p33", password: "p33" } };
+      const req = {
+        body: { username: "p33", password: "p33" },
+        headers: { authorization: `Bearer ${mockToken}` },
+      };
 
       const res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
       await userLogin(req, res, next);
@@ -252,16 +255,6 @@ describe("Given the loginUser controller", () => {
 
   describe("When userGetMessages it's invoked", () => {
     test("Then it should receive the next expected function", async () => {
-      Message.find = jest.fn().mockResolvedValue(true);
-
-      const dispatch = jest.fn();
-
-      jest.mock("jsonwebtoken", () => ({
-        ...jest.requireActual("jsonwebtoken"),
-        sign: () => mockToken,
-        verify: jest.fn().mockResolvedValue({ username: "user", id: "id" }),
-      }));
-
       const res = {
         status: jest.fn().mockReturnThis(200),
         json: jest.fn(),
@@ -274,9 +267,35 @@ describe("Given the loginUser controller", () => {
         headers: { authorization: `Bearer ${mockToken}` },
       };
 
-      dispatch(userGetMessages(req, res, next));
+      Message.find = jest.fn().mockResolvedValue(true);
+      jwt.verify = jest.fn().mockReturnValue({ username: "user", id: "444" });
 
-      expect(dispatch).toHaveBeenCalled();
+      await userGetMessages(req, res, next);
+
+      expect(Message.find).toHaveBeenCalled();
+    });
+  });
+
+  describe("When userGetMessages it's invoked with error", () => {
+    test("Then it should receive the next expected function", async () => {
+      const res = {
+        status: jest.fn().mockReturnThis(200),
+        json: jest.fn(),
+      };
+
+      const req = {
+        params: {
+          UserId: "",
+        },
+        headers: { authorization: `Bearer ${mockToken}` },
+      };
+
+      Message.find = jest.fn().mockRejectedValue(true);
+      jwt.verify = jest.fn().mockReturnValue({ username: "user", id: "444" });
+
+      await userGetMessages(req, res, next);
+
+      expect(next).toHaveBeenCalled();
     });
   });
 });
