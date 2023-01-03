@@ -139,4 +139,21 @@ describe("Given a firebaseUploads middleware", () => {
       expect(dispatch).toHaveBeenCalled();
     });
   });
+
+  describe("When throw error", () => {
+    test("Then it should call next function", async () => {
+      jest.mock("firebase/app", () => ({
+        ...jest.requireActual("firebase/app"),
+        initializeApp: () => jest.fn().mockReturnValue(null),
+      }));
+
+      const req = {};
+
+      const next = jest.fn();
+
+      await firebaseUploads(req, null, next);
+
+      expect(next).toHaveBeenCalled();
+    });
+  });
 });

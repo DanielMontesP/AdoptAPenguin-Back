@@ -118,6 +118,8 @@ const firebaseUploads = async (req, res, next) => {
   } catch (err) {
     message = `${logPrefix}ERROR--> ${err.message}`;
     debug(chalk.red(message));
+
+    next(err);
   }
 };
 
