@@ -107,11 +107,6 @@ describe("Given a post /users/register endpoint", () => {
       await userRegister(req, res, next);
       expect(next).toHaveBeenCalled();
 
-      jest.mock("express-validation", () => ({
-        ...jest.requireActual("express-validation"),
-        validate: jest.fn().mockRejectedValue(false),
-      }));
-
       jest.mock("../../../schemas/userSchema", () => ({
         ...jest.requireActual("../../../schemas/userSchema"),
         userLoginSchema: jest.fn().mockRejectedValue(false),

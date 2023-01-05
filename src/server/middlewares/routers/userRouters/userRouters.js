@@ -1,7 +1,5 @@
 const express = require("express");
 const { validate } = require("express-validation");
-const chalk = require("chalk");
-const debug = require("debug")(chalk.blue("AAP:URouters"));
 
 const {
   userRegister,
@@ -16,43 +14,10 @@ const {
   userRegisterSchema,
 } = require("../../../schemas/userSchema");
 
-const logPrefix = chalk.white("User Request-->");
-
 const usersRouters = express.Router();
 
-const beforeLogin = () => {
-  try {
-    debug(chalk.white(`${logPrefix} LOGIN: Validating user schema...`));
-    const result = validate(userLoginSchema);
-
-    debug(
-      chalk.green(`${logPrefix} LOGIN: User schema validated successfully.`)
-    );
-    return result;
-  } catch (error) {
-    debug(chalk.red(`${logPrefix} LOGIN: ERROR Validating user schema.`));
-
-    return error;
-  }
-};
-
-const beforeRegister = () => {
-  try {
-    debug(chalk.white(`${logPrefix} REGISTER: Validating user schema...`));
-    const result = validate(userRegisterSchema);
-
-    debug(
-      chalk.green(`${logPrefix} REGISTER: User schema validated successfully.`)
-    );
-    return result;
-  } catch (error) {
-    debug(chalk.red(`${logPrefix} REGISTER: ERROR Validating user schema.`));
-    return error;
-  }
-};
-
-usersRouters.post("/register", beforeRegister(), userRegister);
-usersRouters.post("/login", beforeLogin(), userLogin);
+usersRouters.post("/register", validate(userRegisterSchema), userRegister);
+usersRouters.post("/login", validate(userLoginSchema), userLogin);
 
 usersRouters.get("/:UserId", userGet);
 usersRouters.get("/messages/:UserId", userGetMessages);
