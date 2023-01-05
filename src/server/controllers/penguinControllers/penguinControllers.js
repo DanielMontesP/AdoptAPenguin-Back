@@ -269,8 +269,7 @@ const searchPenguin = async (req, res, next) => {
 
     let penguins = [];
 
-    const regexpString = `$regex : /^${stringToSearch}$/i`;
-    const regex = new RegExp(stringToSearch);
+    const regex = { $regex: `${stringToSearch}`, $options: "i" };
 
     const penguinsName = await Penguin.find({
       $or: [
@@ -278,21 +277,11 @@ const searchPenguin = async (req, res, next) => {
           name: regex,
         },
         { category: regex },
-        { description: regexpString },
+        { description: regex },
       ],
-      $options: ["i"],
     });
 
     penguins = penguinsName.length >= 1 ? penguinsName : penguins;
-
-    const penguinsCategory = await Penguin.find({
-      category: regex,
-    });
-
-    penguins =
-      penguinsCategory.length >= 1 && penguinsName.length === 0
-        ? penguinsCategory
-        : penguins;
 
     message = chalk.green(
       `${logPrefixSearch}Found: ${penguins.length} matches.`

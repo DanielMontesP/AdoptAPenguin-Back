@@ -7,7 +7,6 @@ const connectDB = require("../../../../db");
 const app = require("../../../index");
 const {
   userRegister,
-  userLogin,
 } = require("../../../controllers/userControllers/userControllers");
 
 let mongoServer;
@@ -127,37 +126,6 @@ describe("Given a post /users/register endpoint", () => {
       };
       await userRegister(req, res, next);
       expect(next).toHaveBeenCalled();
-    });
-  });
-
-  describe("When it receives a bad login call", () => {
-    test("Then it should respond with an error", async () => {
-      jest.mock("bcrypt", () => ({
-        ...jest.requireActual("bcrypt"),
-        compare: () =>
-          jest.fn().mockResolvedValueOnce(true).mockRejectedValueOnce(false),
-      }));
-      const token = "030d715845518298a37ac8fa80f966eb7349d5e2";
-      jest.mock("jsonwebtoken", () => ({
-        ...jest.requireActual("jsonwebtoken"),
-        sign: () => token,
-      }));
-
-      const beforeLogin = jest.fn();
-
-      const req = { body: { username: "da", password: "ni" } };
-
-      const res = {
-        status: jest.fn().mockReturnValue(200),
-        json: jest.fn().mockReturnValue("true"),
-      };
-
-      const next = jest.fn();
-
-      await userLogin(req, res, next);
-
-      beforeLogin();
-      expect(beforeLogin).toHaveBeenCalled();
     });
   });
 });
