@@ -57,7 +57,7 @@ const getPenguins = async (req, res, next) => {
     message = chalk.green(`${logPrefixGet}Penguins...`);
     debug(message);
 
-    const penguins = await Penguin.find();
+    const penguins = await Penguin.find({}, { imageResized: 0, image: 0 });
     message = chalk.green(
       `${logPrefixGet}Total found: ${penguins.length} cute penguins.`
     );
